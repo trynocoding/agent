@@ -388,19 +388,19 @@ func (cp *CommandPlugin) config() *config.Config {
 
 ```mermaid
 flowchart TB
-  M[cmd/agent/main.go] --> N[internal.NewApp cfg]
+  M["cmd/agent/main.go"] --> N["internal.NewApp(cfg)"]
   N --> Init["config.Init(version,commit)<br/>+ RegisterConfigFile()<br/>+ ResolveConfig()"]
-  Init --> APP[internal.App.Run ctx cfg]
-  APP --> BUS[bus.NewMessagePipe ctx]
-  BUS --> PLUG[plugin.LoadPlugins ctx cfg]
+  Init --> APP["internal.App.Run(ctx, cfg)"]
+  APP --> BUS["bus.NewMessagePipe(ctx)"]
+  BUS --> PLUG["plugin.LoadPlugins(ctx, cfg)"]
   PLUG --> P1[CommandPlugin]
   PLUG --> P2[FileWatcher]
   PLUG --> P3[InstanceWatcher]
-  PLUG --> P4[CollectorPlugin<br/>+ embedded otelcol]
+  PLUG --> P4["CollectorPlugin<br/>+ embedded otelcol"]
   PLUG --> P5[CertificatesPlugin]
-  P1 -->|config() RLock| CS[agentConfig ptr atomic swap]
-  N --> CFG[internal/config 包<br/>viperInstance 单例]
-  CFG --> SINGLE[(单例 viperInstance<br/>viper.NewWithOptions(...))]
+  P1 -->|"config() RLock"| CS["agentConfig ptr atomic swap"]
+  N --> CFG["internal/config 包<br/>viperInstance 单例"]
+  CFG --> SINGLE["(单例 viperInstance<br/>viper.NewWithOptions(...))"]
 ```
 
 > [!note] 单例 vs 传引用
